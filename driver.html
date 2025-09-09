@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Driver Tracker</title>
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+  <h2>Driver Location Sharing</h2>
+  <p>Keep this page open while delivering.</p>
+  <script>
+    const socket = io();
+    if (navigator.geolocation) {
+      navigator.geolocation.watchPosition(
+        (pos) => {
+          const data = {
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude
+          };
+          socket.emit('location', data);
+        },
+        (err) => console.error(err),
+        { enableHighAccuracy: true }
+      );
+    } else {
+      alert("Geolocation not supported");
+    }
+  </script>
+</body>
+</html>
