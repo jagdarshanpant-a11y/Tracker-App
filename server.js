@@ -1,24 +1,20 @@
-const express = require('express');
+const express = require("express");
+const path = require("path");
+
 const app = express();
-const http = require('http').createServer(app);
-const io = require('socket.io')(http);
-const path = require('path');
 
-app.use(express.static(path.join(__dirname, 'public')));
+// ✅ Render provides a dynamic port
+const PORT = process.env.PORT || 3000;
 
-io.on('connection', (socket) => {
-  console.log('a user connected');
+// Serve static files from /public folder
+app.use(express.static(path.join(__dirname, "public")));
 
-  socket.on('location', (data) => {
-    io.emit('location', data);
-  });
-
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
-  });
+// Root URL → open customer page
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "customer.html"));
 });
 
-const PORT = process.env.PORT || 3000;
-http.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+// ✅ Start server
+app.listen(PORT, () => {
+  console.log(`✅ Server running on port ${PORT}`);
 });
